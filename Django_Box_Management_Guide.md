@@ -6,7 +6,7 @@
 ```bash
 # Create and activate a virtual environment
 python -m venv env
-source env/bin/activate  # On Windows: .\env\Scripts\activate
+source env/bin/activate  # On Windows 10: .\env\Scripts\activate
 
 # Install Django
 pip install django

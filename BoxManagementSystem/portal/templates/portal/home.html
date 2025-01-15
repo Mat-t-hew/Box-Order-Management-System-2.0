@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Box Management System - Client Portal</title>
+</head>
+<body>
+    <h1>Available Boxes</h1>
+    <ul>
+        {% for product in products %}
+        <li>
+            <strong>{{ product.name }}</strong> - {{ product.dimensions }} - R{{ product.price }}
+            <!-- Correct Add to Cart button with URL -->
+            <a href="{% url 'add_to_cart' product.id %}">
+                <button>Add to Cart</button>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <!-- Link to the Cart Page -->
+    <a href="{% url 'cart' %}">View Cart</a>
+</body>
+</html>

@@ -13,7 +13,7 @@ pip install django
 ```
 
 ### Create a Django Project
-```bashm
+```bash
 django-admin startproject BoxManagement
 cd BoxManagement
 ```

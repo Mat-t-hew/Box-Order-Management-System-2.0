@@ -10,14 +10,15 @@
         {% for product in products %}
         <li>
             <strong>{{ product.name }}</strong> - {{ product.dimensions }} - R{{ product.price }}
-            <!-- Correct Add to Cart button with URL -->
+            <!-- Add to Cart button -->
             <a href="{% url 'add_to_cart' product.id %}">
                 <button>Add to Cart</button>
             </a>
         </li>
         {% endfor %}
     </ul>
+
     <!-- Link to the Cart Page -->
-    <a href="{% url 'cart' %}">View Cart</a>
+    <a href="{% url 'cart' %}">🛒 View Cart</a>
 </body>
 </html>

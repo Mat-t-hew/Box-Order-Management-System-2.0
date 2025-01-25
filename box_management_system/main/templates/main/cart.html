@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- main/templates/main/cart.html -->
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{% static 'main/styles.css' %}">
+</head>
+<body>
+    <h1>Your Cart</h1>
+    {% if order and order.items.exists %}
+        <ul>
+            {% for item in order.items.all %}
+                <li>
+                    <h2>{{ item.box.get_size_display }} Box</h2>
+                    <p>Price: ${{ item.box.price }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Subtotal: ${{ item.quantity * item.box.price }}</p>
+                    <form action="{% url 'update_cart' item.id %}" method="post">
+                        {% csrf_token %}
+                        <label for="quantity">Update Quantity:</label>
+                        <input type="number" name="quantity" id="quantity" min="1" max="{{ item.box.stock }}" value="{{ item.quantity }}">
+                        <button type="submit">Update</button>
+                    </form>
+                    <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <p>Total: ${{ order.get_total_cost }}</p>
+        <a href="{% url 'checkout' %}">Proceed to Checkout</a>
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+</body>
+</html>

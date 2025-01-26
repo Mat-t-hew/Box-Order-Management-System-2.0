@@ -14,30 +14,6 @@ class Box(models.Model):
     def __str__(self):
         return f"{self.get_size_display()} Box"
 
-class Order(models.Model):
-    box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    customer_name = models.CharField(max_length=100)
-    customer_email = models.EmailField()
-    date_of_collection = models.DateField()
-    address = models.TextField()
-    ordered_at = models.DateTimeField(auto_now_add=True)
-    coupon = models.ForeignKey('Coupon', null=True, blank=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return f"Order {self.id} by {self.customer_name}"
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    box = models.ForeignKey(Box, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.quantity} x {self.box}"
-
-    def get_cost(self):
-        return self.box.price * self.quantity
-
 class Coupon(models.Model):
     code = models.CharField(max_length=50, unique=True)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
@@ -51,3 +27,22 @@ class Coupon(models.Model):
     def is_valid(self):
         now = timezone.now()
         return self.active and self.valid_from <= now <= self.valid_to
+
+class Order(models.Model):
+    box = models.ForeignKey(Box, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    customer_name = models.CharField(max_length=100)
+    customer_email = models.EmailField()
+    date_of_collection = models.DateField()
+    ordered_at = models.DateTimeField(auto_now_add=True)
+    coupon = models.ForeignKey(Coupon, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"Order {self.id} by {self.customer_name}"
+
+    def get_total_cost(self):
+        total = self.box.price * self.quantity
+        if self.coupon and self.coupon.is_valid():
+            discount = (self.coupon.discount_percentage / 100) * total
+            total -= discount
+        return total

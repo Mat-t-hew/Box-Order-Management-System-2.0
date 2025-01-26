@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Box, Order, OrderItem
+from .models import Box, Order, OrderItem, Coupon
 
 # Register your models here.
 
@@ -19,3 +19,16 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('status', 'created_at')
     search_fields = ('customer_name', 'customer_email')
     inlines = [OrderItemInline]
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 1
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemInline]
+    list_display = ('id', 'customer_name', 'ordered_at')
+    search_fields = ('customer_name', 'customer_email')
+
+admin.site.register(Box)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Coupon)

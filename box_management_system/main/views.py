@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Box, Order, OrderItem
+from .models import Box, Order, OrderItem, Coupon
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
 
 # Create your views here.
 
@@ -39,32 +42,71 @@ def view_cart(request):
     return render(request, 'main/cart.html', {'order': order})
 
 def checkout(request):
-    order = Order.objects.filter(
-        customer_name=request.session.session_key,
-        status='Pending'
-    ).first()
-
+    cart = request.session.get('cart', {})
     if request.method == 'POST':
-        # Retrieve shipping information from the form
-        full_name = request.POST.get('full_name')
+        customer_name = request.POST.get('customer_name')
+        customer_email = request.POST.get('customer_email')
+        date_of_collection = request.POST.get('date_of_collection')
         address = request.POST.get('address')
-        city = request.POST.get('city')
-        postal_code = request.POST.get('postal_code')
-        country = request.POST.get('country')
+        coupon_code = request.POST.get('coupon_code', '').strip()
 
-        # Save shipping information to the order
-        order.full_name = full_name
-        order.address = address
-        order.city = city
-        order.postal_code = postal_code
-        order.country = country
-        order.status = 'Completed'
-        order.save()
+        # Calculate total price
+        total = 0
+        for box_id, quantity in cart.items():
+            box = Box.objects.get(id=box_id)
+            total += box.price * quantity
 
-        # Redirect to an order confirmation page
-        return redirect('order_confirmation', order_id=order.id)
+        # Apply coupon discount if valid
+        coupon = None
+        if coupon_code:
+            try:
+                coupon = Coupon.objects.get(code=coupon_code, active=True)
+                if coupon.is_valid():
+                    discount = (coupon.discount_percentage / 100) * total
+                    total -= discount
+                else:
+                    coupon = None
+            except Coupon.DoesNotExist:
+                coupon = None
 
-    return render(request, 'main/checkout.html', {'order': order})
+        # Create order
+        order = Order.objects.create(
+            customer_name=customer_name,
+            customer_email=customer_email,
+            date_of_collection=date_of_collection,
+            address=address,
+            coupon=coupon
+        )
+
+        for box_id, quantity in cart.items():
+            box = Box.objects.get(id=box_id)
+            OrderItem.objects.create(
+                order=order,
+                box=box,
+                quantity=quantity
+            )
+            # Update stock
+            box.stock -= quantity
+            box.save()
+
+        # Send confirmation email
+        subject = 'Order Confirmation'
+        message = f'Thank you for your purchase, {customer_name}!\n\n'
+        message += 'Order Details:\n'
+        for item in order.items.all():
+            message += f'{item.box.get_size_display()} Box (x{item.quantity})\n'
+        message += f'\nTotal: ${total:.2f}\n'
+        if coupon:
+            message += f'Coupon Applied: {coupon.code} (-{coupon.discount_percentage}%)\n'
+        message += f'\nDate of Collection: {date_of_collection}\n'
+        message += f'\nWe will deliver your order to the following address:\n{address}\n'
+        message += '\nThank you for shopping with us!'
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [customer_email])
+
+        # Clear the cart
+        request.session['cart'] = {}
+        return redirect('order_confirmation')
+    return render(request, 'main/checkout.html')
 
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id)

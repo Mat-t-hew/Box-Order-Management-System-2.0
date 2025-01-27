@@ -28,38 +28,24 @@ Follow these steps to set up and run the project locally:
 3.**Activate the Virtual Environment**:
 Activate the Virtual Environment:
 
-On Windows:
+- On Windows:
+box_management_env\Scripts\activate
+- On macOS and Linux:
+source box_management_env/bin/activate
 
-bash
-Copy code
-.\env\Scripts\activate
-On macOS and Linux:
-
-bash
-Copy code
-source env/bin/activate
-Install Dependencies:
-
-bash
-Copy code
+- Install Dependencies:
 pip install -r requirements.txt
-Apply Migrations:
 
-bash
-Copy code
+- Apply Migrations:
 python manage.py makemigrations
 python manage.py migrate
-Create a Superuser:
 
-bash
-Copy code
+- Create a Superuser:
 python manage.py createsuperuser
 Follow the prompts to set up the admin credentials.
 
-Run the Development Server:
+- Run the Development Server:
 
-bash
-Copy code
 python manage.py runserver
 The application will be accessible at http://127.0.0.1:8000/.
 
@@ -87,7 +73,6 @@ Acknowledgements
 Django Documentation: https://docs.djangoproject.com/
 Real Python Django Tutorials: https://realpython.com/tutorials/django/
 vbnet
-Copy code
 
 **Notes**:
 

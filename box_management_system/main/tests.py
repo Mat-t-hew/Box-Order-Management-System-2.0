@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from .models import Box, Order, OrderItem, Coupon
-from .forms import CheckoutForm
+from .form import CheckoutForm
 from django.utils import timezone
 
 # Create your tests here.
@@ -14,7 +14,7 @@ class BoxModelTest(TestCase):
         self.assertEqual(box.stock, 100)
 
 class CouponModelTest(TestCase):
-    def test_coupon_creation(self):
+    def test_coupon_creation(self):cd 
         coupon = Coupon.objects.create(
             code='DISCOUNT50',
             discount_percentage=50.00,

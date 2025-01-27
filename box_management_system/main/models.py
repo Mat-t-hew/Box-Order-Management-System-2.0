@@ -46,3 +46,12 @@ class Order(models.Model):
             discount = (self.coupon.discount_percentage / 100) * total
             total -= discount
         return total
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    box = models.ForeignKey(Box, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Item {self.id} for Order {self.order.id}"

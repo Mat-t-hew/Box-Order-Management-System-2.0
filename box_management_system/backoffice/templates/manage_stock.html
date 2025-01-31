@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load customfilter %}
+<div class="container-fluid">
+    <form action=" " id="stock-form">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ stock.id }}">
+        <input type="hidden" name="product" value="{{ pid }}">
+        <input type="hidden" name="type" value="1">
+        
+        <div class="form-group mb-3">
+            <label for="quantity" class="control-label">Box Quantity</label>
+            <input type="number" step="any" class="form-control rounded-0 text-end bg-dark text-light" id="quantity" name="quantity" value="{{ stock.quantity }}" required>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        $('#stock-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('.err-msg').remove();
+            var el = $('<div>').addClass("alert alert-danger err-msg").hide();
+
+            if (!_this[0].checkValidity()) {
+                _this[0].reportValidity();
+                return false;
+            }
+
+            start_loader();
+            $.ajax({
+                url: "{% url 'save-stock' %}",
+                data: new FormData(_this[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err);
+                    alert("An error occurred.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (resp?.status === 'success') {
+                        location.reload();
+                    } else {
+                        el.text(resp.msg || "An error occurred.");
+                        _this.prepend(el);
+                        el.show('slow');
+                        $("html, body, .modal").scrollTop(0);
+                    }
+                    end_loader();
+                }
+            });
+        });
+    });
+</script>

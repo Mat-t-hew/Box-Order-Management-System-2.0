@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+```html
+{% extends 'base.html' %} {% block pageContent %}
+<div class="container">
+    <h3 class="mb-4">Box Inventory</h3>
+    <table class="table table-dark table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Box Name</th>
+                <th>Available Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for box in boxes %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ box.name }}</td>
+                <td>{{ box.quantity }}</td>
+                <td><a href="{% url 'inventory-history-page' box.pk %}" class="btn btn-primary btn-sm">View History</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock pageContent %}
+```

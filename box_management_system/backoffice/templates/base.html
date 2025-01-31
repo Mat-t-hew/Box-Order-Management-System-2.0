@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} | Box Management System</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        .navbar, .card {
+            background-color: #222;
+            border-color: #444;
+        }
+    </style>
+    {% block headerContent %}{% endblock headerContent %}
+</head>
+<body>
+    {% block TopNavigation %} {% include "topNavigation.html" %} {% endblock TopNavigation %}
+    <main class="py-5">
+        <div class="container mb-3">
+            {% block pageContent %}{% endblock pageContent %}
+        </div>
+    </main>
+    {% block ScriptBlock %}{% endblock ScriptBlock %}
+</body>
+</html>

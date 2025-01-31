@@ -5,31 +5,31 @@
 ### Install Django and Set Up Virtual Environment
 ```bash
 # Create and activate a virtual environment
-python -m venv env
-source env/bin/activate  # On Windows 10: .\env\Scripts\activate
+python -m venv box_management_env 
+box_management_env\Scripts\activate
 
 # Install Django
-pip install django
+pip install -r requirements.txt  
 ```
 
 ### Create a Django Project
 ```bash
-django-admin startproject BoxManagement
-cd BoxManagement
+django-admin startproject box_management_system
+cd box_management_system    
 ```
 
 ## Step 2: Create the Application
 ### Create an App for the Project
 ```bash
-python manage.py startapp box_app
+python manage.py startapp backoffice 
 ```
 
 ### Register the App
-In `BoxManagement/settings.py`, add `box_app` to the `INSTALLED_APPS` list:
+In `BoxManagement/settings.py`, add `backoffice ` to the `INSTALLED_APPS` list:
 ```python
 INSTALLED_APPS = [
     ...
-    'box_app',
+    'bobackoffice ',
 ]
 ```
 

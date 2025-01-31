@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+```html
+{% extends 'base.html' %}
+{% block pageContent %}
+<div class="container pt-3">
+    <div class="card border shadow rounded-0">
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="fw-bold">Sales Transactions</h5>
+            <a href="{% url 'export-sales' %}" class="btn btn-primary">Download PDF</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Total Items</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ sale.date }}</td>
+                        <td>{{ sale.customer }}</td>
+                        <td>{{ sale.item_count }}</td>
+                        <td>${{ sale.total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+```

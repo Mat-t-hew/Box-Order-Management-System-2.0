@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+```html
+{% extends 'base.html' %} {% load humanize %} {% block pageContent %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card card-default rounded-0 shadow ">
+        <div class="card-header">
+            <h4 class="card-title fw-bold">Box Invoices</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered" id="invoice-list">
+                <thead>
+                    <tr class="bg-gradient bg-primary bg-opacity-50 text-light">
+                        <th class="text-center">#</th>
+                        <th class="text-center">Date/Time</th>
+                        <th class="text-center">Transaction Code</th>
+                        <th class="text-center">Customer</th>
+                        <th class="text-center">Total Items</th>
+                        <th class="text-center">Total Amount</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center">{{ invoice.date_created|date:"Y-m-d h:i A" }}</td>
+                        <td class="text-center">{{ invoice.transaction }}</td>
+                        <td class="text-center">{{ invoice.customer }}</td>
+                        <td class="text-center">{{ invoice.item_count|floatformat:0|intcomma }}</td>
+                        <td class="text-center">{{ invoice.total|floatformat:2|intcomma }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-outline-danger btn-sm delete-data" data-id="{{ invoice.pk }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+```

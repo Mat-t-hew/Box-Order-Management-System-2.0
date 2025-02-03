@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block pageContent %}
+<style>
+    main {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto;
+    }
+</style>
+
+<div class="d-flex flex-column w-100 justify-content-center align-items-center">
+    <div class="mb-4">
+        <center>
+            <img src="/media/default/logo.png" alt="Logo" class="img-fluid">
+        </center>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <div class="card card-default rounded-0 shadow bg-dark text-light">
+            <div class="card-header border-bottom border-light">
+                <h4 class="card-title"><b>Login</b></h4>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <form id="login-user" method="POST" action="{% url 'login-user' %}">
+                        {% csrf_token %}
+                        <div class="mdc-layout-grid">
+                            <div class="mdc-layout-grid__inner">
+                                <div class="form-group mb-3">
+                                    <label for="username" class="control-label">Username</label>
+                                    <input type="text" class="form-control rounded-0 bg-dark text-light" name="username" id="username" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password" class="control-label">Password</label>
+                                    <input type="password" class="form-control rounded-0 bg-dark text-light" name="password" id="password" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <div class="col-md-4">
+                                            <a href="{% url 'register-user' %}" class="text-light">Signup</a>
+                                        </div>
+                                        <button class="btn btn-sm rounded-0 btn-primary">
+                                            Login
+                                        </button>
+                                    </div>
+                                </div>
+                                {% for message in messages %}
+                                <div class="alert alert-danger my-2">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock pageContent %} 
+
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#login-user').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('.err-msg').remove();
+            var el = $('<div>').addClass("alert alert-danger err-msg").hide();
+
+            if (!_this[0].checkValidity()) {
+                _this[0].reportValidity();
+                return false;
+            }
+
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'login-user' %}",
+                data: new FormData(_this[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err);
+                    alert_toast("An error occurred", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (resp?.status === 'success') {
+                        location.href = "{% url 'home-page' %}";
+                    } else {
+                        el.text(resp.msg || "Invalid username or password.");
+                        _this.prepend(el);
+                        el.show('slow');
+                        $("html, body, .modal").scrollTop(0);
+                    }
+                    end_loader();
+                }
+            });
+        });
+    });
+</script>
+{% endblock ScriptBlock %}

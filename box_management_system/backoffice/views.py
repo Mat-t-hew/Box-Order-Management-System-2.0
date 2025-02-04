@@ -339,9 +339,9 @@ def get_box(request,pk = None):
         resp['msg'] = 'Box ID is not recognized'
     else:
         product = Box.objects.get(id = pk)
-        resp['data']['box'] = str(product.code + " - " + product.name)
-        resp['data']['id'] = product.id
-        resp['data']['price'] = product.price
+        resp['data']['box'] = str(box.code + " - " + box.name)
+        resp['data']['id'] = box.id
+        resp['data']['price'] = box.price
         resp['status'] = 'success'
     
     return HttpResponse(json.dumps(resp),content_type="application/json")

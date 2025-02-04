@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 {% extends 'base.html' %} {% block pageContent %}
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="card card-default rounded-0 shadow ">
@@ -13,7 +12,7 @@
         </div>
         <div class="card-body">
             <div class="container-fluid">
-                <table class="table table-bordered" id="category-list">
+                <table class="table table-bordered" id="Box_Type-list">
                     <colgroup>
                         <col width="5%">
                         <col width="15%">
@@ -23,7 +22,7 @@
                         <col width="15%">
                     </colgroup>
                     <thead>
-                        <tr class="bg-gradient bg-primary bg-opacity-50 text-dark">
+                        <tr class="bg-gradient bg-primary bg-opacity-50 text-light">
                             <th class="px-2 py-2 text-center">#</th>
                             <th class="px-2 py-2 text-center">Date/Time</th>
                             <th class="px-2 py-2 text-center">Name</th>
@@ -33,24 +32,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for category in categories %}
-                        <tr>
-                            <td class="px-2 py-1 align-middle text-light">{{ forloop.counter }}</td>
-                            <td class="px-2 py-1 align-middle text-light">{{ category.date_created|date:"Y-m-d h:i A" }}</td>
-                            <td class="px-2 py-1 align-middletext-light">{{ category.name }}</td>
+                        {% for Box_Type in categories %}
+                        <tr class="text-light">
+                            <td class="px-2 py-1 align-middle">{{ forloop.counter }}</td>
+                            <td class="px-2 py-1 align-middle">{{ Box_Type.date_created|date:"Y-m-d h:i A" }}</td>
+                            <td class="px-2 py-1 align-middle">{{ Box_Type.name }}</td>
                             <td class="px-2 py-1 align-middle">
-                                <p class="m-0 text-light">{{ category.description }}</p>
+                                <p class="m-0">{{ Box_Type.description }}</p>
                             </td>
                             <td class="px-1 py-1 align-middle text-center">
-                                {% if category.status == '1' %}
+                                {% if Box_Type.status == '1' %}
                                 <span class="badge bg-primary bg-gradient rounded-pill px-2">Active</span> {% else %}
                                 <span class="badge bg-secondary bg-gradient rounded-pill px-2">Inactive</span> {% endif %}
                             </td>
                             <td class="px-2 py-1 align-middle text-center">
-                                <a class="btn btn-outline-primary btn-sm edit-data" href="javascript:void(0)" data-id="{{ category.pk }}" title="Edit">
+                                <a class="btn btn-outline-primary btn-sm edit-data" href="javascript:void(0)" data-id="{{ Box_Type.pk }}" title="Edit">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <button class="btn btn-outline-danger btn-sm delete-data" type="button" data-id="{{ category.pk }}" title="Delete">
+                                <button class="btn btn-outline-danger btn-sm delete-data" type="button" data-id="{{ Box_Type.pk }}" title="Delete">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>
@@ -66,16 +65,18 @@
 <script>
     $(function() {
         $('#add_new').click(function() {
-            uni_modal('<i class="fa fa-plus"></i> Add Category', '{% url "manage-box-type" %}', 'modal-md')
+            uni_modal('<i class="fa fa-plus"></i> Add box-type', '{% url "manage-box-type" %}', 'modal-md')
         })
         $('.edit-data').click(function() {
-            uni_modal('<i class="fa fa-edit"></i> Edit Category', '{% url "manage-box-type" %}/' + $(this).attr('data-id'), 'modal-md')
+            uni_modal('<i class="fa fa-edit"></i> Edit box-type', '{% url "manage-box-type" %}/' + $(this).attr('data-id'), 'modal-md')
         })
         $('.delete-data').click(function() {
-            _conf("Are you sure to delete this Category permanently?", "delete_box_type", [$(this).attr('data-id')])
-        })
+            const message = `<span style="color: black;">Are you sure to delete this Box-type permanently?</span>`;
+            _conf(message, "delete_box_type", [$(this).attr('data-id')]);
+        });
 
-        $('#category-list').DataTable({
+
+        $('#Box_Type-list').DataTable({
             columnDefs: [{
                 orderable: false,
                 targets: 5

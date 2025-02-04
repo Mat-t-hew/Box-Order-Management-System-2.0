@@ -32,7 +32,7 @@ urlpatterns = [
 
     # Inventory Management
     path('inventory', views.inventory, name='inventory-page'),
-    path('inventory/<int:pk>', views.inv_history, name='inventory-history-page'),
+    path('inventory-history-page', views.inv_history, name='inventory-history-page'),
     path('stock/<int:pid>', views.manage_stock, name='manage-stock'),
     path('stock/<int:pid>/<int:pk>', views.manage_stock, name='manage-stock-pk'),
     path('save-stock', views.save_stock, name='save-stock'),
@@ -40,7 +40,7 @@ urlpatterns = [
 
     # Sales Management
     path('sales', views.sales_mgt, name='sales-page'),
-    path('get-box/<int:pk>', views.get_box, name='get-box'),
+    path('get-box', views.get_box, name='get-box'),
     path('save-sales', views.save_sales, name="save-sales"),
     path('export-sales/', views.export_sales, name='export-sales'),
 

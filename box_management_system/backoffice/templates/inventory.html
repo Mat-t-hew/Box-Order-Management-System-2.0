@@ -1,26 +1,65 @@
 <!DOCTYPE html>
-{% extends 'base.html' %} {% block pageContent %}
-<div class="container">
-    <h3 class="mb-4">Box Inventory</h3>
-    <table class="table table-dark table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Box Name</th>
-                <th>Available Stock</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for box in boxes %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ box.name }}</td>
-                <td>{{ box.quantity }}</td>
-                <td><a href="{% url 'inventory-history-page' box.pk %}" class="btn btn-primary btn-sm">View History</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% extends 'base.html' %} {% load humanize %} {% block pageContent %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card card-default rounded-0 shadow ">
+        <div class="card-header">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+                <h4 class="card-title fw-bold">Box Inventory</h4>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" id="box-list">
+                    <colgroup>
+                        <col width="5%">
+                        <col width="35%">
+                        <col width="35%">
+                        <col width="25%">
+                    </colgroup>
+                    <thead>
+                        <tr class="bg-gradient bg-primary bg-opacity-50 text-light">
+                            <th class="px-2 py-2 text-center">#</th>
+                            <th class="px-2 py-2 text-center">Box Name</th>
+                            <th class="px-2 py-2 text-center">Available Stock</th>
+                            <th class="px-2 py-2 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for box in products %}
+                        <tr class="text-light   ">
+                            <td class="px-2 py-1 align-middle text-center">{{ forloop.counter }}</td>
+                            <td class="px-2 py-1 align-middle">{{ box.name }}</td>
+                            <td class="px-2 py-1 align-middle text-end">{{ box.count_inventory }}</td>
+                            <td class="px-2 py-1 align-middle text-center">
+                                <a class="btn btn-outline-primary btn-sm" href="{% url 'inventory-history-page' box.pk %}" data-id="{{ box.pk }}" title="View History">
+                                    <i class="fa fa-eye text-light"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock pageContent %}
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#box-list').DataTable({
+            columnDefs: [{
+                orderable: false,
+                targets: 5
+            }],
+            initComplete: function(settings, json) {
+                $('table td, table th').addClass('px-2 py-1')
+            },
+            drawCallback: function(settings) {
+                $('table td, table th').addClass('px-2 py-1')
+            }
+        })
+    })
+
+    
+</script>
+{% endblock ScriptBlock %}

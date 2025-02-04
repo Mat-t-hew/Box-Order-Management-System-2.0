@@ -66,18 +66,32 @@ class SaveBox_Type(forms.ModelForm):
 
 class SaveBox(forms.ModelForm):
     name = forms.CharField(max_length=250)
-    description = forms.CharField(widget=forms.Textarea())
+    description = forms.Textarea()   
     status = forms.ChoiceField(choices=[('1', 'Active'), ('2', 'Inactive')])
+    description = forms.CharField(max_length=250)
 
     class Meta:
         model = Box
         fields = ('code', 'name', 'description', 'status', 'price')
 
     def clean_code(self):
+        id = self.instance.id if self.instance.id else 0
         code = self.cleaned_data['code']
-        if Box.objects.exclude(id=self.instance.id).filter(code=code).exists():
-            raise forms.ValidationError(f"A Box with the code '{code}' already exists.")
-        return code
+        try:
+            if int(id) > 0:
+                product = Box.objects.exclude(id=id).get(code = code)
+            else:
+                product = Box.objects.get(code = code)
+        except:
+            return code
+        raise forms.ValidationError(f"{code} Box type Already Exists.")
+#def clean_code(self):
+        #id = self.instance.id if self.instance.id else 0
+        #code = self.cleaned_data['code']
+        #try:
+        #if Box.objects.exclude(id=self.instance.id).filter(code=code).exists():
+         #   raise forms.ValidationError(f"A Box with the code '{code}' already exists.")
+        #return code
 
 class SaveStock(forms.ModelForm):
     box = forms.CharField(max_length=30)

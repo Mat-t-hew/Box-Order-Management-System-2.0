@@ -29,7 +29,7 @@ In `BoxManagement/settings.py`, add `backoffice ` to the `INSTALLED_APPS` list:
 ```python
 INSTALLED_APPS = [
     ...
-    'bobackoffice ',
+    'backoffice ',
 ]
 ```
 

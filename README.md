@@ -36,6 +36,9 @@ source box_management_env/bin/activate
 - Install Dependencies:
 pip install -r requirements.txt
 
+- Change directory:
+cd box_management_system
+
 - Apply Migrations:
 python manage.py makemigrations
 python manage.py migrate
@@ -45,7 +48,6 @@ python manage.py createsuperuser
 Follow the prompts to set up the admin credentials.
 
 - Run the Development Server:
-
 python manage.py runserver
 The application will be accessible at http://127.0.0.1:8000/.
 
@@ -73,7 +75,9 @@ Acknowledgements
 Django Documentation: https://docs.djangoproject.com/
 Real Python Django Tutorials: https://realpython.com/tutorials/django/
 vbnet
-
+https://www.slideshare.net/slideshow/inventory-management-system-16598132/16598132
+https://sunscrapers.com/blog/ultimate-tutorial-django-rest-framework-part-1/
+https://fontawesome.com/
 **Notes**:
 
 - Replace `https://github.com/yourusername/box-order-management-system.git` with the actual URL of your project's repository.
